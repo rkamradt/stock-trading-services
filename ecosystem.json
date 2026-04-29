@@ -1,0 +1,320 @@
+{
+  "project": "Stock Trading",
+  "generated": "2025-01-01T00:00:00.000Z",
+  "services": [
+    {
+      "id": "customer-management",
+      "name": "CustomerManagement",
+      "archetype": "http",
+      "tech": "Spring Boot",
+      "purpose": "Owns customer identity, personal information, KYC/AML compliance status, and onboarding workflow",
+      "endpoints": [
+        { "method": "POST", "path": "/customers", "description": "Create a new customer profile" },
+        { "method": "GET", "path": "/customers/{customerId}", "description": "Retrieve customer information and verification status" },
+        { "method": "PUT", "path": "/customers/{customerId}", "description": "Update customer personal information" },
+        { "method": "PUT", "path": "/customers/{customerId}/kyc-status", "description": "Update KYC verification status" },
+        { "method": "GET", "path": "/customers/{customerId}/compliance-status", "description": "Get current AML and compliance standing" }
+      ],
+      "events": {
+        "emits": [
+          { "name": "customer.created", "description": "Emitted when a new customer completes initial registration" },
+          { "name": "customer.kyc_completed", "description": "Emitted when customer passes KYC verification" },
+          { "name": "customer.status_changed", "description": "Emitted when compliance or account status changes" }
+        ],
+        "accepts": []
+      },
+      "dependsOn": []
+    },
+    {
+      "id": "market-data-provider",
+      "name": "MarketDataProvider",
+      "archetype": "provider",
+      "tech": "Node.js/Express",
+      "purpose": "Wraps external market data APIs to provide real-time quotes, historical prices, and corporate actions to the ecosystem",
+      "foreignApi": {
+        "name": "MarketDataAPI",
+        "baseUrl": "https://api.marketdata.com",
+        "auth": "apiKey",
+        "mock": true
+      },
+      "endpoints": [
+        { "method": "GET", "path": "/quotes/{symbol}", "description": "Get real-time quote for a security" },
+        { "method": "GET", "path": "/historical/{symbol}", "description": "Get historical price data" },
+        { "method": "GET", "path": "/corporate-actions/{symbol}", "description": "Get dividend and split information" }
+      ],
+      "events": {
+        "emits": [
+          { "name": "market.quote_updated", "description": "Emitted when real-time price data changes" },
+          { "name": "market.corporate_action", "description": "Emitted for dividends, splits, and other corporate events" }
+        ],
+        "accepts": []
+      },
+      "dependsOn": []
+    },
+    {
+      "id": "account-service",
+      "name": "AccountService",
+      "archetype": "http",
+      "tech": "Spring Boot",
+      "purpose": "Owns customer brokerage accounts, balances, trading permissions, and account-level settings",
+      "endpoints": [
+        { "method": "POST", "path": "/accounts", "description": "Create a new brokerage account for a customer" },
+        { "method": "GET", "path": "/accounts/{accountId}", "description": "Retrieve account details and current balances" },
+        { "method": "GET", "path": "/customers/{customerId}/accounts", "description": "Get all accounts for a customer" },
+        { "method": "PUT", "path": "/accounts/{accountId}/settings", "description": "Update account trading permissions and settings" },
+        { "method": "POST", "path": "/accounts/{accountId}/deposits", "description": "Record a cash deposit to the account" },
+        { "method": "POST", "path": "/accounts/{accountId}/withdrawals", "description": "Process a cash withdrawal from the account" },
+        { "method": "GET", "path": "/accounts/{accountId}/equity", "description": "Calculate total account equity including positions" }
+      ],
+      "events": {
+        "emits": [
+          { "name": "account.created", "description": "Emitted when a new brokerage account is opened" },
+          { "name": "account.balance_updated", "description": "Emitted when cash balance changes due to deposits, withdrawals, or trades" },
+          { "name": "account.status_changed", "description": "Emitted when account restrictions or permissions change" }
+        ],
+        "accepts": []
+      },
+      "dependsOn": ["customer-management"]
+    },
+    {
+      "id": "portfolio-service",
+      "name": "PortfolioService",
+      "archetype": "http",
+      "tech": "Spring Boot",
+      "purpose": "Owns physical stock positions per account, cost basis tracking, and realized/unrealized P&L calculations",
+      "endpoints": [
+        { "method": "GET", "path": "/accounts/{accountId}/positions", "description": "Get all stock positions for an account" },
+        { "method": "GET", "path": "/accounts/{accountId}/positions/{symbol}", "description": "Get position details for a specific security" },
+        { "method": "GET", "path": "/accounts/{accountId}/pnl", "description": "Calculate realized and unrealized P&L for the portfolio" },
+        { "method": "GET", "path": "/accounts/{accountId}/positions/{symbol}/history", "description": "Get position history and cost basis details" },
+        { "method": "POST", "path": "/accounts/{accountId}/positions/{symbol}/corporate-actions", "description": "Record corporate action adjustments (splits, dividends, spin-offs)" }
+      ],
+      "events": {
+        "emits": [
+          { "name": "position.opened", "description": "Emitted when a new stock position is established" },
+          { "name": "position.updated", "description": "Emitted when position quantity or cost basis changes" },
+          { "name": "position.closed", "description": "Emitted when a position is fully liquidated" },
+          { "name": "portfolio.rebalanced", "description": "Emitted after corporate actions affect the portfolio" }
+        ],
+        "accepts": []
+      },
+      "dependsOn": ["account-service", "market-data-provider"]
+    },
+    {
+      "id": "trading-service",
+      "name": "TradingService",
+      "archetype": "http",
+      "tech": "Spring Boot",
+      "purpose": "Owns trade order lifecycle, execution, and settlement including order types, fills, and integration with execution venues",
+      "endpoints": [
+        { "method": "POST", "path": "/orders", "description": "Submit a new trade order" },
+        { "method": "GET", "path": "/orders/{orderId}", "description": "Get order status and fill details" },
+        { "method": "PUT", "path": "/orders/{orderId}/cancel", "description": "Cancel a pending order" },
+        { "method": "PUT", "path": "/orders/{orderId}/modify", "description": "Modify quantity or price of a pending order" },
+        { "method": "GET", "path": "/accounts/{accountId}/orders", "description": "Get all orders for an account" },
+        { "method": "GET", "path": "/accounts/{accountId}/trades", "description": "Get trade execution history" },
+        { "method": "GET", "path": "/orders/{orderId}/executions", "description": "Get detailed execution information for an order" }
+      ],
+      "events": {
+        "emits": [
+          { "name": "order.submitted", "description": "Emitted when a new order is placed and validated" },
+          { "name": "order.filled", "description": "Emitted when an order executes, either partially or completely" },
+          { "name": "order.cancelled", "description": "Emitted when an order is cancelled by user or system" },
+          { "name": "trade.executed", "description": "Emitted with detailed trade execution including price, quantity, and fees" }
+        ],
+        "accepts": []
+      },
+      "dependsOn": ["account-service", "market-data-provider"]
+    },
+    {
+      "id": "margin-service",
+      "name": "MarginService",
+      "archetype": "http",
+      "tech": "Spring Boot",
+      "purpose": "Owns margin account calculations, buying power, margin calls, interest on borrowed funds, and liquidation triggers",
+      "endpoints": [
+        { "method": "GET", "path": "/accounts/{accountId}/buying-power", "description": "Calculate available buying power for margin trades" },
+        { "method": "GET", "path": "/accounts/{accountId}/margin-requirements", "description": "Get current margin requirements and maintenance levels" },
+        { "method": "POST", "path": "/trades/margin-check", "description": "Pre-trade margin requirement validation" },
+        { "method": "GET", "path": "/accounts/{accountId}/margin-calls", "description": "Check current margin call status and deficiency amount" },
+        { "method": "GET", "path": "/accounts/{accountId}/interest", "description": "Calculate margin interest owed on borrowed funds" },
+        { "method": "GET", "path": "/accounts/{accountId}/collateral", "description": "Get collateral values and haircut calculations" },
+        { "method": "POST", "path": "/accounts/{accountId}/liquidation", "description": "Trigger liquidation process for margin calls" }
+      ],
+      "events": {
+        "emits": [
+          { "name": "margin.call_triggered", "description": "Emitted when account falls below maintenance margin requirements" },
+          { "name": "margin.interest_accrued", "description": "Emitted daily with calculated interest on borrowed funds" },
+          { "name": "margin.liquidation_required", "description": "Emitted when forced selling is required due to margin deficiency" },
+          { "name": "margin.buying_power_updated", "description": "Emitted when available margin buying power changes" }
+        ],
+        "accepts": []
+      },
+      "dependsOn": ["account-service", "portfolio-service", "market-data-provider"]
+    },
+    {
+      "id": "derivatives-trading-service",
+      "name": "DerivativesTradingService",
+      "archetype": "http",
+      "tech": "Spring Boot",
+      "purpose": "Owns derivative instrument definitions, options chains, derivative position tracking, Greeks calculations, and exercise/assignment processing",
+      "endpoints": [
+        { "method": "GET", "path": "/options/chains/{symbol}", "description": "Get options chain for an underlying security" },
+        { "method": "POST", "path": "/derivatives/orders", "description": "Submit derivative orders (options, futures, swaps)" },
+        { "method": "GET", "path": "/accounts/{accountId}/derivative-positions", "description": "Get all derivative positions and Greeks for an account" },
+        { "method": "POST", "path": "/options/{optionId}/exercise", "description": "Exercise an option position" },
+        { "method": "GET", "path": "/derivatives/expirations", "description": "Get expiration schedules and assignment notices" },
+        { "method": "GET", "path": "/derivatives/{derivativeId}/greeks", "description": "Calculate Greeks (delta, gamma, theta, vega) for a derivative" },
+        { "method": "POST", "path": "/futures/{futuresId}/close", "description": "Close or roll a futures position" }
+      ],
+      "events": {
+        "emits": [
+          { "name": "derivative.position_opened", "description": "Emitted when a new derivative position is established" },
+          { "name": "derivative.exercised", "description": "Emitted when an option is exercised, affecting underlying positions" },
+          { "name": "derivative.assigned", "description": "Emitted when an option writer receives assignment notice" },
+          { "name": "derivative.expired", "description": "Emitted when derivative expires worthless or is settled" },
+          { "name": "derivative.greeks_updated", "description": "Emitted when risk metrics change due to market movements" }
+        ],
+        "accepts": []
+      },
+      "dependsOn": ["trading-service", "portfolio-service", "market-data-provider"]
+    },
+    {
+      "id": "risk-management-service",
+      "name": "RiskManagementService",
+      "archetype": "http",
+      "tech": "Spring Boot",
+      "purpose": "Owns real-time portfolio risk monitoring, pre-trade risk checks, position limits, and regulatory compliance oversight",
+      "endpoints": [
+        { "method": "POST", "path": "/trades/risk-check", "description": "Validate a proposed trade against risk limits" },
+        { "method": "GET", "path": "/accounts/{accountId}/risk-metrics", "description": "Get current risk metrics and exposures for an account" },
+        { "method": "PUT", "path": "/accounts/{accountId}/risk-limits", "description": "Set or update risk limits and thresholds" },
+        { "method": "GET", "path": "/portfolios/{portfolioId}/var", "description": "Calculate Value at Risk for a portfolio" },
+        { "method": "POST", "path": "/stress-tests", "description": "Run stress testing scenarios against positions" },
+        { "method": "GET", "path": "/compliance/exposures", "description": "Get regulatory exposure reporting data" },
+        { "method": "GET", "path": "/alerts/risk-breaches", "description": "Get current risk limit violations and warnings" }
+      ],
+      "events": {
+        "emits": [
+          { "name": "risk.limit_breached", "description": "Emitted when positions exceed configured risk thresholds" },
+          { "name": "risk.circuit_breaker_triggered", "description": "Emitted when a trade is blocked due to risk controls" },
+          { "name": "risk.exposure_warning", "description": "Emitted when concentration limits are being approached" },
+          { "name": "risk.compliance_alert", "description": "Emitted for regulatory reporting requirements and suspicious activity" }
+        ],
+        "accepts": []
+      },
+      "dependsOn": ["account-service", "portfolio-service", "trading-service", "derivatives-trading-service", "margin-service"]
+    },
+    {
+      "id": "settlement-provider",
+      "name": "SettlementProvider",
+      "archetype": "provider",
+      "tech": "Spring Boot",
+      "purpose": "Wraps external clearing and settlement networks (DTCC, NSCC) to process trade settlement instructions and status",
+      "foreignApi": {
+        "name": "DTCC Settlement Network",
+        "baseUrl": "https://api.dtcc.com",
+        "auth": "oauth2",
+        "mock": true
+      },
+      "endpoints": [
+        { "method": "POST", "path": "/settlement/instructions", "description": "Submit settlement instructions to external clearing network" },
+        { "method": "GET", "path": "/settlement/{tradeId}/status", "description": "Query settlement status from clearing system" },
+        { "method": "POST", "path": "/settlement/exceptions", "description": "Handle settlement fails and manual interventions" },
+        { "method": "GET", "path": "/settlement/reports", "description": "Get settlement activity and status reports" }
+      ],
+      "events": {
+        "emits": [
+          { "name": "settlement.submitted", "description": "Emitted when settlement instructions are sent to external network" },
+          { "name": "settlement.confirmed", "description": "Emitted when external system confirms successful settlement" },
+          { "name": "settlement.failed", "description": "Emitted when settlement fails in external system" },
+          { "name": "settlement.exception", "description": "Emitted when manual intervention is required for settlement" }
+        ],
+        "accepts": []
+      },
+      "dependsOn": ["trading-service"]
+    },
+    {
+      "id": "reporting-service",
+      "name": "ReportingService",
+      "archetype": "http",
+      "tech": "Spring Boot",
+      "purpose": "Owns account statements, trade confirmations, portfolio analytics, and regulatory compliance reporting",
+      "endpoints": [
+        { "method": "POST", "path": "/reports/statements", "description": "Generate account statements for specified date ranges" },
+        { "method": "POST", "path": "/reports/trade-confirmations", "description": "Create trade confirmation reports for executed orders" },
+        { "method": "GET", "path": "/accounts/{accountId}/performance", "description": "Generate portfolio performance analytics and benchmarking" },
+        { "method": "GET", "path": "/accounts/{accountId}/position-summary", "description": "Create position and holdings summary reports" },
+        { "method": "POST", "path": "/reports/margin-utilization", "description": "Generate margin and buying power utilization reports" },
+        { "method": "POST", "path": "/reports/regulatory", "description": "Create regulatory compliance and filing reports" },
+        { "method": "POST", "path": "/reports/schedule", "description": "Schedule automated report generation and delivery" }
+      ],
+      "events": {
+        "emits": [
+          { "name": "report.generated", "description": "Emitted when any report is successfully created" },
+          { "name": "report.delivered", "description": "Emitted when report is sent to customer or regulator" },
+          { "name": "statement.published", "description": "Emitted for periodic account statements" },
+          { "name": "confirmation.sent", "description": "Emitted when trade execution confirmations are delivered" }
+        ],
+        "accepts": []
+      },
+      "dependsOn": ["account-service", "portfolio-service", "trading-service", "margin-service", "derivatives-trading-service"]
+    },
+    {
+      "id": "notification-service",
+      "name": "NotificationService",
+      "archetype": "messaging",
+      "tech": "Spring Boot",
+      "purpose": "Owns real-time customer notifications, alert management, delivery preferences, and multi-channel communication",
+      "endpoints": [
+        { "method": "POST", "path": "/notifications/send", "description": "Send immediate notification to a customer" },
+        { "method": "PUT", "path": "/customers/{customerId}/preferences", "description": "Update notification preferences and delivery channels" },
+        { "method": "POST", "path": "/alerts", "description": "Create price or portfolio alert rules" },
+        { "method": "GET", "path": "/customers/{customerId}/alerts", "description": "Get active alerts for a customer" },
+        { "method": "GET", "path": "/notifications/{customerId}/history", "description": "Get notification delivery history" },
+        { "method": "DELETE", "path": "/alerts/{alertId}", "description": "Cancel an active alert" }
+      ],
+      "events": {
+        "emits": [
+          { "name": "notification.sent", "description": "Emitted when a message is successfully delivered to customer" },
+          { "name": "alert.triggered", "description": "Emitted when customer-defined alert conditions are met" },
+          { "name": "notification.failed", "description": "Emitted when message delivery fails" },
+          { "name": "preference.updated", "description": "Emitted when customer changes notification settings" }
+        ],
+        "accepts": [
+          { "name": "order.filled", "description": "Listens for trade confirmations to send to customers" },
+          { "name": "margin.call_triggered", "description": "Listens for margin calls to alert customers" },
+          { "name": "risk.limit_breached", "description": "Listens for risk breaches to notify customers" }
+        ]
+      },
+      "dependsOn": ["customer-management"]
+    },
+    {
+      "id": "compliance-service",
+      "name": "ComplianceService",
+      "archetype": "http",
+      "tech": "Spring Boot",
+      "purpose": "Owns audit trails, regulatory reporting, trade surveillance, and compliance monitoring across all brokerage activities",
+      "endpoints": [
+        { "method": "POST", "path": "/reports/regulatory", "description": "Generate regulatory reports and filings for FINRA, SEC" },
+        { "method": "GET", "path": "/audit-trails/{entityId}", "description": "Query audit trails and transaction history for compliance review" },
+        { "method": "GET", "path": "/surveillance/patterns", "description": "Monitor trade patterns and detect compliance violations" },
+        { "method": "POST", "path": "/best-execution/analysis", "description": "Analyze and report best execution compliance" },
+        { "method": "POST", "path": "/large-trader/reports", "description": "Generate large trader position reports" },
+        { "method": "POST", "path": "/suspicious-activity/reports", "description": "File suspicious activity reports (SAR)" },
+        { "method": "PUT", "path": "/rules/{ruleId}", "description": "Update compliance rule configurations and thresholds" },
+        { "method": "GET", "path": "/violations", "description": "Get current compliance violations and alerts" }
+      ],
+      "events": {
+        "emits": [
+          { "name": "compliance.violation_detected", "description": "Emitted when compliance rules are breached" },
+          { "name": "compliance.report_filed", "description": "Emitted when regulatory reports are submitted to authorities" },
+          { "name": "compliance.audit_required", "description": "Emitted when manual compliance review is needed" },
+          { "name": "compliance.sar_filed", "description": "Emitted when suspicious activity reports are filed" }
+        ],
+        "accepts": []
+      },
+      "dependsOn": ["customer-management", "account-service", "trading-service", "portfolio-service", "derivatives-trading-service", "risk-management-service"]
+    }
+  ]
+}
