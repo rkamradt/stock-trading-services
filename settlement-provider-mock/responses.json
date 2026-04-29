@@ -1,0 +1,363 @@
+{
+  "POST /v1/settlement/instructions": {
+    "status": 202,
+    "body": {
+      "instructionId": "INSTR-20240315-000142",
+      "status": "SUBMITTED",
+      "settlementDate": "2024-03-17",
+      "submittedAt": "2024-03-15T14:22:10.000Z",
+      "dtccReferenceId": "DTCC-REF-20240315-98321",
+      "security": {
+        "cusip": "037833100",
+        "description": "Apple Inc. Common Stock",
+        "quantity": 5000,
+        "price": 172.45,
+        "currency": "USD",
+        "totalValue": 862250.00
+      },
+      "deliveringSide": {
+        "participantId": "DTC-00123",
+        "accountNumber": "ACC-123-4567",
+        "firmName": "Apex Prime Brokerage LLC"
+      },
+      "receivingSide": {
+        "participantId": "DTC-00456",
+        "accountNumber": "ACC-456-7890",
+        "firmName": "Meridian Securities Inc."
+      },
+      "transactionType": "DVP",
+      "message": "Settlement instruction accepted and queued for processing."
+    }
+  },
+  "GET /v1/settlement/instructions/{instructionId}": {
+    "status": 200,
+    "body": {
+      "instructionId": "INSTR-20240315-000142",
+      "status": "CONFIRMED",
+      "settlementDate": "2024-03-17",
+      "submittedAt": "2024-03-15T14:22:10.000Z",
+      "confirmedAt": "2024-03-17T08:05:33.000Z",
+      "dtccReferenceId": "DTCC-REF-20240315-98321",
+      "security": {
+        "cusip": "037833100",
+        "description": "Apple Inc. Common Stock",
+        "quantity": 5000,
+        "price": 172.45,
+        "currency": "USD",
+        "totalValue": 862250.00
+      },
+      "deliveringSide": {
+        "participantId": "DTC-00123",
+        "accountNumber": "ACC-123-4567",
+        "firmName": "Apex Prime Brokerage LLC"
+      },
+      "receivingSide": {
+        "participantId": "DTC-00456",
+        "accountNumber": "ACC-456-7890",
+        "firmName": "Meridian Securities Inc."
+      },
+      "transactionType": "DVP",
+      "settlementAmount": 862250.00,
+      "currency": "USD",
+      "message": "Settlement completed successfully."
+    }
+  },
+  "GET /v1/settlement/instructions": {
+    "status": 200,
+    "body": {
+      "instructions": [
+        {
+          "instructionId": "INSTR-20240315-000142",
+          "status": "CONFIRMED",
+          "settlementDate": "2024-03-17",
+          "dtccReferenceId": "DTCC-REF-20240315-98321",
+          "security": {
+            "cusip": "037833100",
+            "description": "Apple Inc. Common Stock",
+            "quantity": 5000,
+            "currency": "USD",
+            "totalValue": 862250.00
+          },
+          "transactionType": "DVP",
+          "confirmedAt": "2024-03-17T08:05:33.000Z"
+        },
+        {
+          "instructionId": "INSTR-20240314-000098",
+          "status": "FAILED",
+          "settlementDate": "2024-03-16",
+          "dtccReferenceId": "DTCC-REF-20240314-97104",
+          "security": {
+            "cusip": "594918104",
+            "description": "Microsoft Corporation Common Stock",
+            "quantity": 1200,
+            "currency": "USD",
+            "totalValue": 494040.00
+          },
+          "transactionType": "DVP",
+          "failedAt": "2024-03-16T09:14:02.000Z",
+          "failureReason": "INSUFFICIENT_SECURITIES"
+        },
+        {
+          "instructionId": "INSTR-20240314-000101",
+          "status": "EXCEPTION",
+          "settlementDate": "2024-03-16",
+          "dtccReferenceId": "DTCC-REF-20240314-97210",
+          "security": {
+            "cusip": "023135106",
+            "description": "Amazon.com Inc. Common Stock",
+            "quantity": 800,
+            "currency": "USD",
+            "totalValue": 143024.00
+          },
+          "transactionType": "DVP",
+          "exceptionRaisedAt": "2024-03-16T11:30:55.000Z",
+          "exceptionCode": "COUNTERPARTY_MISMATCH",
+          "exceptionMessage": "Delivering and receiving participant details do not match master file. Manual review required."
+        }
+      ],
+      "pagination": {
+        "page": 1,
+        "pageSize": 50,
+        "totalCount": 3,
+        "totalPages": 1
+      }
+    }
+  },
+  "DELETE /v1/settlement/instructions/{instructionId}": {
+    "status": 200,
+    "body": {
+      "instructionId": "INSTR-20240315-000142",
+      "status": "CANCELLED",
+      "cancelledAt": "2024-03-15T15:00:00.000Z",
+      "message": "Settlement instruction successfully cancelled."
+    }
+  },
+  "PUT /v1/settlement/instructions/{instructionId}": {
+    "status": 200,
+    "body": {
+      "instructionId": "INSTR-20240315-000142",
+      "status": "SUBMITTED",
+      "updatedAt": "2024-03-15T14:45:00.000Z",
+      "dtccReferenceId": "DTCC-REF-20240315-98321",
+      "security": {
+        "cusip": "037833100",
+        "description": "Apple Inc. Common Stock",
+        "quantity": 5500,
+        "price": 172.45,
+        "currency": "USD",
+        "totalValue": 948475.00
+      },
+      "message": "Settlement instruction updated successfully."
+    }
+  },
+  "POST /v1/settlement/instructions/{instructionId}/affirm": {
+    "status": 200,
+    "body": {
+      "instructionId": "INSTR-20240315-000142",
+      "affirmationId": "AFF-20240315-007731",
+      "status": "AFFIRMED",
+      "affirmedAt": "2024-03-15T14:30:00.000Z",
+      "dtccReferenceId": "DTCC-REF-20240315-98321",
+      "message": "Settlement instruction affirmed by counterparty."
+    }
+  },
+  "POST /v1/settlement/instructions/{instructionId}/cancel": {
+    "status": 200,
+    "body": {
+      "instructionId": "INSTR-20240315-000142",
+      "status": "CANCELLED",
+      "cancelledAt": "2024-03-15T15:05:00.000Z",
+      "dtccReferenceId": "DTCC-REF-20240315-98321",
+      "message": "Cancellation request submitted to DTCC."
+    }
+  },
+  "GET /v1/settlement/exceptions": {
+    "status": 200,
+    "body": {
+      "exceptions": [
+        {
+          "exceptionId": "EXC-20240314-000055",
+          "instructionId": "INSTR-20240314-000101",
+          "dtccReferenceId": "DTCC-REF-20240314-97210",
+          "exceptionCode": "COUNTERPARTY_MISMATCH",
+          "exceptionMessage": "Delivering and receiving participant details do not match master file. Manual review required.",
+          "severity": "HIGH",
+          "status": "OPEN",
+          "raisedAt": "2024-03-16T11:30:55.000Z",
+          "assignedTo": null,
+          "security": {
+            "cusip": "023135106",
+            "description": "Amazon.com Inc. Common Stock",
+            "quantity": 800,
+            "currency": "USD",
+            "totalValue": 143024.00
+          }
+        }
+      ],
+      "pagination": {
+        "page": 1,
+        "pageSize": 50,
+        "totalCount": 1,
+        "totalPages": 1
+      }
+    }
+  },
+  "GET /v1/settlement/exceptions/{exceptionId}": {
+    "status": 200,
+    "body": {
+      "exceptionId": "EXC-20240314-000055",
+      "instructionId": "INSTR-20240314-000101",
+      "dtccReferenceId": "DTCC-REF-20240314-97210",
+      "exceptionCode": "COUNTERPARTY_MISMATCH",
+      "exceptionMessage": "Delivering and receiving participant details do not match master file. Manual review required.",
+      "severity": "HIGH",
+      "status": "OPEN",
+      "raisedAt": "2024-03-16T11:30:55.000Z",
+      "assignedTo": null,
+      "resolutionNotes": null,
+      "security": {
+        "cusip": "023135106",
+        "description": "Amazon.com Inc. Common Stock",
+        "quantity": 800,
+        "price": 178.78,
+        "currency": "USD",
+        "totalValue": 143024.00
+      },
+      "deliveringSide": {
+        "participantId": "DTC-00789",
+        "accountNumber": "ACC-789-0011",
+        "firmName": "Cascade Financial Partners"
+      },
+      "receivingSide": {
+        "participantId": "DTC-00456",
+        "accountNumber": "ACC-456-7890",
+        "firmName": "Meridian Securities Inc."
+      },
+      "auditTrail": [
+        {
+          "timestamp": "2024-03-16T11:30:55.000Z",
+          "event": "EXCEPTION_RAISED",
+          "description": "Exception automatically raised by DTCC validation engine."
+        }
+      ]
+    }
+  },
+  "POST /v1/settlement/exceptions/{exceptionId}/resolve": {
+    "status": 200,
+    "body": {
+      "exceptionId": "EXC-20240314-000055",
+      "instructionId": "INSTR-20240314-000101",
+      "status": "RESOLVED",
+      "resolvedAt": "2024-03-16T14:00:00.000Z",
+      "resolvedBy": "ops-user@firm.com",
+      "resolutionNotes": "Counterparty details verified and corrected. Instruction resubmitted.",
+      "message": "Exception resolved. Settlement instruction has been resubmitted."
+    }
+  },
+  "GET /v1/participants": {
+    "status": 200,
+    "body": {
+      "participants": [
+        {
+          "participantId": "DTC-00123",
+          "firmName": "Apex Prime Brokerage LLC",
+          "status": "ACTIVE",
+          "participantType": "FULL",
+          "country": "US",
+          "registeredAt": "2005-06-14T00:00:00.000Z"
+        },
+        {
+          "participantId": "DTC-00456",
+          "firmName": "Meridian Securities Inc.",
+          "status": "ACTIVE",
+          "participantType": "FULL",
+          "country": "US",
+          "registeredAt": "2008-11-22T00:00:00.000Z"
+        },
+        {
+          "participantId": "DTC-00789",
+          "firmName": "Cascade Financial Partners",
+          "status": "ACTIVE",
+          "participantType": "FULL",
+          "country": "US",
+          "registeredAt": "2012-03-01T00:00:00.000Z"
+        }
+      ],
+      "pagination": {
+        "page": 1,
+        "pageSize": 50,
+        "totalCount": 3,
+        "totalPages": 1
+      }
+    }
+  },
+  "GET /v1/participants/{participantId}": {
+    "status": 200,
+    "body": {
+      "participantId": "DTC-00123",
+      "firmName": "Apex Prime Brokerage LLC",
+      "status": "ACTIVE",
+      "participantType": "FULL",
+      "country": "US",
+      "address": {
+        "street": "200 Vesey Street",
+        "city": "New York",
+        "state": "NY",
+        "postalCode": "10281",
+        "country": "US"
+      },
+      "contact": {
+        "name": "John Harrington",
+        "email": "ops@apexprime.com",
+        "phone": "+1-212-555-0100"
+      },
+      "registeredAt": "2005-06-14T00:00:00.000Z",
+      "accounts": [
+        {
+          "accountNumber": "ACC-123-4567",
+          "accountType": "GENERAL_LEDGER",
+          "currency": "USD",
+          "status": "ACTIVE"
+        }
+      ]
+    }
+  },
+  "GET /v1/securities/{cusip}": {
+    "status": 200,
+    "body": {
+      "cusip": "037833100",
+      "isin": "US0378331005",
+      "description": "Apple Inc. Common Stock",
+      "issuer": "Apple Inc.",
+      "securityType": "EQUITY",
+      "currency": "USD",
+      "market": "NASDAQ",
+      "settlementCycles": 2,
+      "eligibleForDVP": true,
+      "lastUpdated": "2024-03-15T00:00:00.000Z"
+    }
+  },
+  "GET /v1/settlement/status": {
+    "status": 200,
+    "body": {
+      "networkStatus": "OPERATIONAL",
+      "currentCycle": "AM",
+      "nextCutoff": "2024-03-15T15:30:00.000Z",
+      "settlementDate": "2024-03-17",
+      "pendingInstructions": 1482,
+      "processedToday": 8934,
+      "failedToday": 23,
+      "exceptionsOpen": 7,
+      "lastUpdated": "2024-03-15T14:00:00.000Z"
+    }
+  },
+  "POST /v1/oauth/token": {
+    "status": 200,
+    "body": {
+      "access_token": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.mock-token-payload.mock-signature",
+      "token_type": "Bearer",
+      "expires_in": 3600,
+      "scope": "settlement:read settlement:write participants:read securities:read"
+    }
+  }
+}
