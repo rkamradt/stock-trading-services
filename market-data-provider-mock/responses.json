@@ -1,0 +1,372 @@
+{
+  "GET /v1/quotes/{symbol}": {
+    "status": 200,
+    "body": {
+      "symbol": "AAPL",
+      "name": "Apple Inc.",
+      "exchange": "NASDAQ",
+      "currency": "USD",
+      "price": 189.84,
+      "open": 188.52,
+      "high": 191.05,
+      "low": 188.10,
+      "close": 189.84,
+      "previousClose": 187.44,
+      "change": 2.40,
+      "changePercent": 1.28,
+      "volume": 54312870,
+      "avgVolume": 58921000,
+      "marketCap": 2923456780000,
+      "peRatio": 31.45,
+      "week52High": 199.62,
+      "week52Low": 143.90,
+      "timestamp": "2024-06-12T20:00:00Z",
+      "marketStatus": "closed"
+    }
+  },
+  "GET /v1/quotes": {
+    "status": 200,
+    "body": {
+      "quotes": [
+        {
+          "symbol": "AAPL",
+          "name": "Apple Inc.",
+          "exchange": "NASDAQ",
+          "currency": "USD",
+          "price": 189.84,
+          "change": 2.40,
+          "changePercent": 1.28,
+          "volume": 54312870,
+          "timestamp": "2024-06-12T20:00:00Z"
+        },
+        {
+          "symbol": "MSFT",
+          "name": "Microsoft Corporation",
+          "exchange": "NASDAQ",
+          "currency": "USD",
+          "price": 415.26,
+          "change": -1.74,
+          "changePercent": -0.42,
+          "volume": 21098430,
+          "timestamp": "2024-06-12T20:00:00Z"
+        },
+        {
+          "symbol": "GOOGL",
+          "name": "Alphabet Inc.",
+          "exchange": "NASDAQ",
+          "currency": "USD",
+          "price": 177.40,
+          "change": 3.12,
+          "changePercent": 1.79,
+          "volume": 18763210,
+          "timestamp": "2024-06-12T20:00:00Z"
+        }
+      ],
+      "count": 3,
+      "timestamp": "2024-06-12T20:00:00Z"
+    }
+  },
+  "GET /v1/markets/realtime": {
+    "status": 200,
+    "body": {
+      "feed": [
+        {
+          "symbol": "AAPL",
+          "price": 190.12,
+          "bid": 190.10,
+          "ask": 190.14,
+          "bidSize": 200,
+          "askSize": 300,
+          "volume": 54500000,
+          "lastTradeTime": "2024-06-12T19:59:58Z",
+          "change": 2.68,
+          "changePercent": 1.43
+        },
+        {
+          "symbol": "MSFT",
+          "price": 414.80,
+          "bid": 414.78,
+          "ask": 414.82,
+          "bidSize": 100,
+          "askSize": 150,
+          "volume": 21200000,
+          "lastTradeTime": "2024-06-12T19:59:57Z",
+          "change": -2.20,
+          "changePercent": -0.53
+        },
+        {
+          "symbol": "TSLA",
+          "price": 182.63,
+          "bid": 182.60,
+          "ask": 182.66,
+          "bidSize": 500,
+          "askSize": 400,
+          "volume": 103456000,
+          "lastTradeTime": "2024-06-12T19:59:59Z",
+          "change": 5.43,
+          "changePercent": 3.07
+        }
+      ],
+      "timestamp": "2024-06-12T20:00:00Z"
+    }
+  },
+  "GET /v1/corporate-actions": {
+    "status": 200,
+    "body": {
+      "corporateActions": [
+        {
+          "id": "ca-00123",
+          "symbol": "AAPL",
+          "name": "Apple Inc.",
+          "type": "dividend",
+          "status": "declared",
+          "amount": 0.25,
+          "currency": "USD",
+          "frequency": "quarterly",
+          "declaredDate": "2024-05-02",
+          "exDividendDate": "2024-05-10",
+          "recordDate": "2024-05-13",
+          "payableDate": "2024-05-16",
+          "description": "Apple Inc. declares quarterly cash dividend of $0.25 per share"
+        },
+        {
+          "id": "ca-00124",
+          "symbol": "NVDA",
+          "name": "NVIDIA Corporation",
+          "type": "split",
+          "status": "announced",
+          "splitRatio": "10:1",
+          "splitFactor": 10,
+          "announcedDate": "2024-05-22",
+          "exDate": "2024-06-10",
+          "effectiveDate": "2024-06-10",
+          "description": "NVIDIA Corporation announces 10-for-1 forward stock split"
+        },
+        {
+          "id": "ca-00125",
+          "symbol": "MSFT",
+          "name": "Microsoft Corporation",
+          "type": "dividend",
+          "status": "declared",
+          "amount": 0.75,
+          "currency": "USD",
+          "frequency": "quarterly",
+          "declaredDate": "2024-06-05",
+          "exDividendDate": "2024-08-14",
+          "recordDate": "2024-08-15",
+          "payableDate": "2024-09-12",
+          "description": "Microsoft Corporation declares quarterly cash dividend of $0.75 per share"
+        }
+      ],
+      "count": 3,
+      "timestamp": "2024-06-12T20:00:00Z"
+    }
+  },
+  "GET /v1/corporate-actions/{symbol}": {
+    "status": 200,
+    "body": {
+      "symbol": "AAPL",
+      "name": "Apple Inc.",
+      "corporateActions": [
+        {
+          "id": "ca-00123",
+          "type": "dividend",
+          "status": "declared",
+          "amount": 0.25,
+          "currency": "USD",
+          "frequency": "quarterly",
+          "declaredDate": "2024-05-02",
+          "exDividendDate": "2024-05-10",
+          "recordDate": "2024-05-13",
+          "payableDate": "2024-05-16",
+          "description": "Apple Inc. declares quarterly cash dividend of $0.25 per share"
+        },
+        {
+          "id": "ca-00089",
+          "type": "split",
+          "status": "completed",
+          "splitRatio": "4:1",
+          "splitFactor": 4,
+          "announcedDate": "2020-07-30",
+          "exDate": "2020-08-31",
+          "effectiveDate": "2020-08-31",
+          "description": "Apple Inc. 4-for-1 forward stock split"
+        }
+      ],
+      "count": 2,
+      "timestamp": "2024-06-12T20:00:00Z"
+    }
+  },
+  "GET /v1/markets/status": {
+    "status": 200,
+    "body": {
+      "markets": [
+        {
+          "market": "NYSE",
+          "region": "United States",
+          "primaryExchanges": "New York Stock Exchange",
+          "type": "equity",
+          "localOpen": "09:30",
+          "localClose": "16:00",
+          "timezone": "America/New_York",
+          "status": "closed",
+          "notes": "Market closed — after regular trading hours",
+          "currentTime": "2024-06-12T20:00:00-04:00"
+        },
+        {
+          "market": "NASDAQ",
+          "region": "United States",
+          "primaryExchanges": "NASDAQ Stock Exchange",
+          "type": "equity",
+          "localOpen": "09:30",
+          "localClose": "16:00",
+          "timezone": "America/New_York",
+          "status": "closed",
+          "notes": "Market closed — after regular trading hours",
+          "currentTime": "2024-06-12T20:00:00-04:00"
+        }
+      ],
+      "timestamp": "2024-06-12T20:00:00Z"
+    }
+  },
+  "GET /v1/instruments/search": {
+    "status": 200,
+    "body": {
+      "results": [
+        {
+          "symbol": "AAPL",
+          "name": "Apple Inc.",
+          "type": "Common Stock",
+          "exchange": "NASDAQ",
+          "region": "United States",
+          "currency": "USD",
+          "isin": "US0378331005",
+          "cusip": "037833100",
+          "figi": "BBG000B9XRY4"
+        },
+        {
+          "symbol": "AAPLX",
+          "name": "Apple Index Fund",
+          "type": "ETF",
+          "exchange": "NYSE ARCA",
+          "region": "United States",
+          "currency": "USD",
+          "isin": "US38149W1027",
+          "cusip": "38149W102",
+          "figi": "BBG00C3L9JZ4"
+        }
+      ],
+      "count": 2,
+      "query": "AAPL",
+      "timestamp": "2024-06-12T20:00:00Z"
+    }
+  },
+  "GET /v1/instruments/{symbol}": {
+    "status": 200,
+    "body": {
+      "symbol": "AAPL",
+      "name": "Apple Inc.",
+      "description": "Apple Inc. designs, manufactures, and markets smartphones, personal computers, tablets, wearables, and accessories worldwide.",
+      "type": "Common Stock",
+      "exchange": "NASDAQ",
+      "region": "United States",
+      "currency": "USD",
+      "isin": "US0378331005",
+      "cusip": "037833100",
+      "figi": "BBG000B9XRY4",
+      "sector": "Technology",
+      "industry": "Consumer Electronics",
+      "employees": 164000,
+      "ceo": "Tim Cook",
+      "website": "https://www.apple.com",
+      "address": "One Apple Park Way, Cupertino, CA 95014, USA",
+      "shareClassSharesOutstanding": 15441900000,
+      "timestamp": "2024-06-12T20:00:00Z"
+    }
+  },
+  "GET /v1/history/{symbol}": {
+    "status": 200,
+    "body": {
+      "symbol": "AAPL",
+      "interval": "1d",
+      "candles": [
+        {
+          "date": "2024-06-10",
+          "open": 193.12,
+          "high": 194.48,
+          "low": 190.55,
+          "close": 193.12,
+          "volume": 53089340,
+          "vwap": 192.74,
+          "adjClose": 193.12
+        },
+        {
+          "date": "2024-06-11",
+          "open": 191.50,
+          "high": 192.35,
+          "low": 186.62,
+          "close": 187.44,
+          "volume": 82073880,
+          "vwap": 189.20,
+          "adjClose": 187.44
+        },
+        {
+          "date": "2024-06-12",
+          "open": 188.52,
+          "high": 191.05,
+          "low": 188.10,
+          "close": 189.84,
+          "volume": 54312870,
+          "vwap": 189.61,
+          "adjClose": 189.84
+        }
+      ],
+      "count": 3,
+      "currency": "USD",
+      "timestamp": "2024-06-12T20:00:00Z"
+    }
+  },
+  "POST /v1/quotes/batch": {
+    "status": 200,
+    "body": {
+      "quotes": [
+        {
+          "symbol": "AAPL",
+          "name": "Apple Inc.",
+          "exchange": "NASDAQ",
+          "currency": "USD",
+          "price": 189.84,
+          "change": 2.40,
+          "changePercent": 1.28,
+          "volume": 54312870,
+          "timestamp": "2024-06-12T20:00:00Z"
+        },
+        {
+          "symbol": "MSFT",
+          "name": "Microsoft Corporation",
+          "exchange": "NASDAQ",
+          "currency": "USD",
+          "price": 415.26,
+          "change": -1.74,
+          "changePercent": -0.42,
+          "volume": 21098430,
+          "timestamp": "2024-06-12T20:00:00Z"
+        },
+        {
+          "symbol": "TSLA",
+          "name": "Tesla Inc.",
+          "exchange": "NASDAQ",
+          "currency": "USD",
+          "price": 182.63,
+          "change": 5.43,
+          "changePercent": 3.07,
+          "volume": 103456000,
+          "timestamp": "2024-06-12T20:00:00Z"
+        }
+      ],
+      "requested": 3,
+      "returned": 3,
+      "timestamp": "2024-06-12T20:00:00Z"
+    }
+  }
+}
